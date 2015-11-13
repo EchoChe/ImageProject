@@ -1,0 +1,5 @@
+use git remote to Github has something wrong:
+fatal: Not a git repository (or any parent up to mount parent /home/kineam)
+	Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+
+	解决方法：git init
