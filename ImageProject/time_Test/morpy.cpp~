@@ -1,0 +1,149 @@
+/************************************************************************* 
+    > File Name: morpy.cpp
+    > Author: chefang
+    > Mail: chefang.com
+    > Created Time: 2015年10月28日 星期三 11时23分29秒
+ ************************************************************************/
+
+#include<iostream>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/cudafilters.hpp"
+#include "opencv2/cudaimgproc.hpp"
+#include <stdio.h>
+
+using namespace std;
+using namespace cv;
+
+int main(int argc, char * argv[])
+{
+	Mat src_cpu = imread("1.jpg");
+	Mat dst_cpu;
+	cuda::GpuMat src_gpu, dst_gpu;
+	src_gpu.upload(src_cpu);
+	
+	double start, time;
+	char ch;
+
+	if(src_gpu.channels() == 3)
+	{
+		cuda::GpuMat src4ch;
+		cuda::cvtColor(src_gpu, src4ch, COLOR_BGR2BGRA);
+		src_gpu = src4ch;
+	}
+	Mat element = getStructuringElement(MORPH_RECT, Size(5, 5), Point(2, 2));
+	while( (ch = getchar()) != '0')
+	{
+		switch(ch)
+		{
+			case '1'://dilate
+				{
+					//start = static_cast<double>(getTickCount());
+					start = getTickCount();
+					morphologyEx(src_cpu, dst_cpu, MORPH_DILATE, element );
+					time = (getTickCount() - start) / getTickFrequency();
+					printf("cpu about dilate runtime:%lfms", time*1000);
+
+					//start = static_cast<double>(getTickCount());
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_DILATE, src_gpu.type(), element);
+					start = getTickCount();
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about dilate runtime:%lfms\n", time*1000);
+				}break;
+			case '2'://erode
+				{
+				start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_ERODE, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about erode runtime:%lfms", time*1000);
+					
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_ERODE, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about erode runtime:%lfms\n", time*1000);
+				}break;
+			case '3'://open
+				{
+					start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_OPEN, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about open runtime:%lfms", time*1000);
+					
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_OPEN, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());					
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about open runtime:%lfms\n", time*1000);
+				}break;
+			case '4'://close
+				{
+					start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_CLOSE, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about close runtime:%lfms", time*1000);
+					
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_CLOSE, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());					
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about close runtime:%lfms\n", time*1000);
+				}break;
+			case '5'://Morphological Gradient
+				{
+					start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_GRADIENT, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about morphological gradient runtime:%lfms", time*1000);
+					
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_GRADIENT, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about morphological gradient runtime:%lfms\n", time*1000);
+				}break;
+				case '6'://tophat
+				{
+					start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_TOPHAT, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about tophat runtime:%lfms", time*1000);
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_TOPHAT, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());					
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about tophat runtime:%lfms\n", time*1000);
+				}break;
+			case '7'://blackhat
+				{
+					start = static_cast<double>(getTickCount());
+					morphologyEx(src_cpu, dst_cpu, MORPH_BLACKHAT, element );
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("cpu about blackhat runtime:%lfms", time*1000);
+					
+					
+					Ptr<cuda::Filter> openFilter = cuda::createMorphologyFilter(MORPH_BLACKHAT, src_gpu.type(), element);
+					start = static_cast<double>(getTickCount());
+					openFilter->apply(src_gpu, dst_gpu);
+					time = ((double)getTickCount() - start) / getTickFrequency();
+					printf("\ngpu about blackhat runtime:%lfms\n", time*1000);
+				}break;
+			default:
+				break;
+		}
+	}
+
+	
+	
+
+	Mat h_dst(dst_gpu);
+	imshow("open/close", h_dst);
+	waitKey(0);
+}

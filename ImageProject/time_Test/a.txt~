@@ -1,0 +1,31 @@
+Device 0:  "GeForce GTX 560"  1022Mb, sm_21, 336 cores, Driver/Runtime ver.7.50/7.50
+cpu time boxFilter 22.726ms
+gpu time boxFilter 178.832ms
+cpu runtime blur1.02977ms
+cpu runtime Gaussian 0.730608ms
+gpu time Gaussian 0.365016ms
+cpu runtime medianBlur 27.8495ms
+cpu runtime bilateraFilter 112.596ms
+gpu runtime bilateraFilter 21.4966ms
+cpu about dilate runtime:0.405241ms
+gpu about dilate runtime:1.69966ms
+cpu about erode runtime:0.398802ms
+gpu about erode runtime:1.71065ms
+cpu about open runtime:1.19273ms
+gpu about open runtime:3.56794ms
+cpu about close runtime:1.17063ms
+gpu about close runtime:3.54255ms
+cpu about Morphological Gradient runtime:1.29078ms
+gpu about Morphological gradient runtime:3.86917ms
+cpu about tophat runtime:0.783744ms
+gpu about tophat runtime:3.95539ms
+cpu about blackhat runtime:0.743951ms
+gpu about blackhat runtime:3.76782ms
+cpu time about Filter2D: 0.507707ms
+gpu time about LinearFilter : 0.285475ms
+cpu runtime about sobel: 0.77823ms
+gpu run time about sobel: 0.338214ms
+cpu runtime about scharr: 8.02773ms
+gpu time about scharr: 0.328563ms
+cpu runtime about laplacian: 0.949346ms
+gpu runtime about laplacian: 0.467573ms
