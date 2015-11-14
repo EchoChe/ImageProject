@@ -1,0 +1,5 @@
+#test code
+open a termianal and run
+$bash make.sh xxxx.cpp
+./xxxx test-image.jpg
+

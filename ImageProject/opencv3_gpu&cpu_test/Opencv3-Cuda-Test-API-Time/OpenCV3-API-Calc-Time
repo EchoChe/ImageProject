@@ -1,0 +1,67 @@
+								opencv3 API	test report
+							opencv  api in the  cpu and gpu time calc
+										test image
+										2560X1440
+						device:	cpu --Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+								gpu --NVIDIA Corporation GF114 [GeForce GTX 560]
+
+
+
+
+
+author:chefang
+
+API								cpu  time(ms)		gpu time(ms)	speed-up
+
+GaussianBlur					3.07407				1.03093			2.98185
+boxFilter						4.61907				1.73665			2.65975
+blur							4.3989				NO
+medianBlur						3.07407				NO
+bilateralFilter					1076.76				220.379			4.88597
+dilate							1.75052				7.79432			0.219519
+erode							2.16767				7.91551			0.273851
+open							2.96267				15.8819			0.186545
+close							3.74262				15.9989			0.23393
+Morphological Gradien			3.57474				15.8451			0.225606
+tophat							3.1284				15.81			0.197523
+blackhat						2.97779				15.7951			0.188526
+Filter2D						2.15548				2.91896			0.738441
+sobel							2.31971				1.63282			1.42068
+scharr							39.6494				1.61518			24.5479
+laplacian						4.30916				5.4097			0.796562
+
+author:liusheng
+
+API								cpu  time(ms)		gpu time(ms)	speed-up
+
+rotate							4.26192				192.648			0.0221228
+warpAffine						4.39486				254.684			0.0172561
+getPerspectiveTransform			0.060865			0.798365		0.0762398
+warpPerspective					13.9072				0.92665			15.008
+remap							4.20007				0.967108		4.3464
+resize							0.364122			0.449116		0.810753
+cvtColor						1.34415				0.820775		1.63771
+threshold						0.540949			0.231911		2.33261
+integral						2.85192				4.2715			0.667662
+calcHist						0.791109			0.726335		1.08918
+normalize						1.32877				1.94307			0.68385
+equalizeHist					1.10735				25.0242			0.0441402
+
+
+author:liangkangkang
+
+API								cpu  time(ms)		gpu time(ms)	speed-up
+
+Canny							54.4248				7.58968			7.1709
+HoughCircles(300X300)			24.4545				5.13328			4.7076
+HoughLines						370.745				100.107			3.70347
+HoughLinesP						269.849				117.724			2.29222
+cornerHarris					81.1254				6.38281			12.71
+goodFeaturesToTrack				104.409				17.3947			6.00233
+sift							NO					NO
+surf							NO					NO
+
+
+
+NO:it is not realise for cuda in the opencv3
+NO TEST:don't konw to do
