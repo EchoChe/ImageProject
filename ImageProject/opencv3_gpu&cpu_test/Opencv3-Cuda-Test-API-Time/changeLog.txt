@@ -1,0 +1,287 @@
+version2.2
+普通修正：
+	库文件被重新整合：将cxcore、cv、cvaux、highgui、ml分为几个小模块来做：
+	opencv_core:核心函数（基本结构、算法、线性代数、dft、XML和YML I/O...）
+	opencv_imgproc：处理图像（滤波、高斯模糊、膨胀、腐蚀、直方图、remap、resize）
+	opencv_highgui:GUI 和图像或视频 I/O
+	opencv_ml: 统计机器学习模块（SVM，决策树、Boosting等 ）
+	opencv_feature2d: 2D特征检测和描述（SURF、FAST等，包括新的特征框架匹配）
+	opencv_video：移动分析和对象轨迹（光流、移动模板、background subtraction）
+	opencv_object:图像中对象检测（基于Haar 和 LBP的人脸检测，基于HOG的行人检测 ）
+	opencv_calib3d:摄像机标定、立体匹配、三维数据处理
+	opencv_flann:最近邻算法库（匹配用的）
+	opencv_contrib:贡献于代码但是还不成熟
+	opencv_legacy:以前版本的代码，为了向后兼容
+	opencv_gpu:使用cuda加速一些opencv函数（相对不稳定，但是利于opencv开发）
+基本功能特征：
+1.core：
+	新类型Matx<T, m, n>被添加。Vec<T, n>源自Matx<T, n , 1>.
+	cv::exp  和cv::log因为SSE2的优化变得更快。
+2.imgproc:
+	重新更改颜色空间转变个功能
+	RGB->Lab & RGB->Luv执行有了显著提高
+	添加了 Bayer->RGB
+	使用的VNG算法，虽然比简单更改运算慢很多，但是增加了很多图像的细节。
+	增加了8位的RGB->HSV/HLS  转变功能。H值变化在0-255范围内而不是0-179.
+	添加广角照相机 initUndistortRectifyMap.
+3.feature2d
+	为提取关键点、计算描述符、匹配而统一框架。以前可用的检测和描述已经通过该框架被重新包装（如SURF、FAST、StarDetector等）。
+	SURF关键点被使用TBB(线程构建块)并行
+4.objdetect：
+	实现SVM对象检测
+5.calib3d：
+	新模型：
+	x'=x*(1+ k1 * r2 + k2*r4+k3*r6)/(1+ k4*r2 + k5 * r4 + k6 * r6)+<tangential_distortion for x>,
+	y'=y*(1+ k1 * r2 + k2*r4+k3*r6)/(1+ k4*r 2 + k5 * r4 + k6 * r6)+<tangential_distortion for y>广角镜头的口径测定。
+	广角镜头的矫正功能被添加。
+6.ml：
+	添加Gradient boosting tree(决策树)
+7.highgui：
+	增加QT下实现的功能，但需要QT SDK
+	支持16位和LZW-compressed TIFFs
+8.gpu：
+	opencv的新的部分,由NVIDIA创建,还只是开端。
+	所有函数加cv::namespace命名空间，其中一些主要部件的API：
+		a.图像算法：滤波操作、形态学操作、几何变形、直方图
+		b.三维立体匹配算法：块匹配，置信传播和恒定空间置信传播
+		c.HOG-基本对象检测：比cpu运算快多个数量级。
+8.python 绑定
+	
+
+2.3Beta
+新功能和特点：
+1.core：
+	opencv不再使用软件lapack（数学软件),现在有独立的库
+	算术操作上支持混合类型的操作数和任意通道。
+2.feature2d:
+	添加BRIEF 和ORB特征描述（用于视觉增强）
+3.calib3d：
+	添加新的校准：circle grid
+4.highgui：
+	videoInput（视频输入）现在是highgui的一部分（windows）。
+5.stiching：
+	图像拼接部分：从同一点拍摄出来的一系列图片连成一个全景。
+6.python:
+	2个模块：cv和cv2.cv2
+7.contrib:
+	添加新的立体匹配算法SteraoVar。
+8.gpu
+	需要CUDA4.0版本或者更新的。
+优化：
+	一些机器学习算法使用TBB(线程构建块)实现。
+
+	
+2.3.1
+opencv4Andriod
+	opencv java 绑定安卓平台发行beta2版本。
+新的功能和特点：
+	1.实现视网膜模块
+	2.支持Ximea 相机
+	3.平面划分结构（面向c++）
+	4.添加几个python的例子
+	5.优化FLANN. python中也实现优化
+	6.支持ffmpeg（可以多线程编解码），所以读取视频前所未有的快。
+优化：
+	实现稀疏Lucas-Kanade 光流。在四核机器上运行速度是原来的9+倍
+
+
+2.4Beta
+新功能：
+	1.引入新类cv::Algorithm，它是所有重要的opencv功能函数的基类。有以下特点：
+		a.虚构造函数
+		b.可用的算法列表
+		c.可根据名称检索和设置算法参数
+		d.加载XML/YNL时可以减少参数
+	2.新的ffmpeg：多线程编解码。
+	3.取消feature2d。引入的类cv::Algorthm可以派生出FeatureDetector和类DescriptorExtractor，他们都是Feature2D的基础。
+	4.将SIFT和SURF移入nonfree模块。（SIFT被改进）
+	5.添加state-of-art 无纹理检测算法。
+	6.人脸识别算法
+	7.解决PNP（即插即用）算法
+	8.提高LogPolar 实现
+	9. stub module photo has been created to support a quickly growing
+	"computational	photography" area. Currently, it only contains inpai	ntingalgorithm,	moved from imgproc	, but it's planned to add much more functionality.'
+	10.添加模块videostab，解决video稳定问题
+	11.Canny边缘检测可以可以应用于彩色图片，有更好的边缘
+	12.python多线程。
+opencv on GPU
+	1.添加不同的光流算法：Brox, PyrLK-booth Dense and
+	Sparse(密集和稀疏变化)、Farneback
+	2.特征点检测：
+		轨迹特征、 FAST\ORB 替代了 SURF
+	3.GPU模块加强：
+		CUDA4.1或者更新的版本、使cpu和GPU实现的结果相似、添加边缘外插使支持更多的功能、提高性能
+	4.实现PyrUp和PyrDown
+	5.GPU实现矩阵乘法。
+	6.在highgui模块中实现opengl back-end，他们可以不通过cpu直接将GpuMat显示。
+实现：
+	一些opencv函数：颜色转换、形态学操作、数据类型转换、特征匹配都使用了TBB或者SSE上优化。
+
+
+2.4.0 
+主要变化：
+	1.opencv通过cv::getBuildInformation()提供成熟的创建信息.
+	2.可以通过ffmpeg读写视频，也可以在MacOS 上使用
+	3.使用TBB优化MOG2 背景
+	4.Asus Xtion支持highgui
+
+
+2.4.1
+	1.GPU模块支持CUDA4.1和CUDA4.2
+	2.为存储opencv数据结构添加API (FileStorage)
+	3.cv::calcOpticalFlowPyrLK支持提前计算金字塔作为输入。
+	4.python中：SURF 和 MSER重新被包装
+
+
+2.4.2
+	1.android引入新的分配模型
+	2.实现了新的关键点描述：FREAK
+	3.改进人脸识别
+	4.创建ios 的opencv2框架
+	5.GPU模块：
+		a.使用密集和稀疏反感重新实现光流，新的比之前速度快1.5-2倍
+		b.使用区域之间的插补实现resize。整型矩阵类型提速30-35倍
+	
+2.4.3
+	1.并行：TBB、OpenMP、Grand Central Dispath。
+	2.新的java框架，更好的摄像机支持android平台。
+	3.opencv2框架支持在ios6 和 iphone5-
+	4.GPU
+		a.用户可以使用设备层写cuda设备的代码
+		b.LBP级联支持级联分类器
+		c.fast不是局部降噪
+		d.实现积分图
+		e.实现Hough圆和Hough线、Hough变化
+		f.双边滤波
+		g.漫水填充
+		h.前景背景分割算法
+		i.HOG
+	5.opencl:
+		a.算术操作
+		b.滤波
+		c.几何图形转变
+		d.级联训练器
+		e.光流
+		目前只运行在GPU上。
+	
+2.4.4	
+	1.gpu:
+		a.支持NVIDIA CARMA 平台
+		b.直线检测：HoughLinesP
+		c.Lab/Luv <--> RGB
+	2.opencl
+		a.ocl::Mat 存储矩阵
+		b.新的算法包括houghcircle、更多的颜色转换
+		c.使用AMD FFT库优化：线性混合、矩形样例、膨胀/腐蚀、Canny、卷积、均值滤波
+	
+
+2.4.5
+	1.支持WinRT
+	2.添加视频分析模块（the new video super-resolution module ）
+	3.在cpu和gpu加速中，实现直方图均衡化（分别在imgproc和gpu模块）
+	4.opencl模块改善：
+		a.2 stereo correspondence algorithms: stereobm (block matching) and
+		stereobp (belief propagation) have been added
+
+
+	
+2.4.6
+	1.windows RT：添加视频文件的i/o和使用相机的样例实现，支持TBB并行或者MS并发
+	2.cuda5.5:支持桌面和ARM
+	3.支持QT5.5
+	4.opencl:
+		a.Binary compatiblility with both OpenCL 1.1/1.2 platforms.
+		b.New functions ported, CLAHE, GoodFeaturesToTrack, TVL1 optical flow and more.
+		c.优化：HOG
+		d.通过setBinaryDiskCache接口优化更多内核二值cache选项
+		e.opencl二进制包含面向windows的superpack
+	5.使用cv::paralle_for_()在可以多个背景下并行（如MS Concurrency, Apple's GDC, OpenMP, Intel TBB etc.)）
+
+
+
+2.4.7
+	1.opencl：
+		a.不用安装opencl SDK 就可以创建ocl模块
+		b.opencl运行时间动态变化（ocl  or non-ocl）
+		c.可以更改opencl默认设备（通过OPENCV_OPENCL_DEVIC）
+		d.优化SVM， MOG/NOG2， KalmanFilter
+	2.cuda
+		a.优化直方图、TV-L1光流、resize
+		b.更新gpu的立体匹配例子
+		c.BGR <-->YUV颜色转换和位操作
+	3.Android
+		a.支持android NDK-r9
+		b.ndroid 4.3 支持：硬件检测和本地相机
+		
+
+
+2.4.8
+	1.opencl
+		a.opencv可以使用opencl用户提供的上下文
+		b.opencl命令队列可以被cpu线程创建
+	2.NVIDIA CUDA支持SoC
+	3.支持Android4.4
+	4.Samsung设备支持
+	5.在core模块中添加java的gpu检测函数
+
+
+2.4.9
+	1.opencl优化：（ocl::sum, ocl::countNonZero, ocl::minMax. 位操作，Haar人脸检测）
+	2.本地相机多样获取（cv::VideoCapture）
+	3.使cuda支持所有CUDA-enables SoCs
+	4.VTK-Based 3D 可视化模块 viz 
+		该模块提供方便的办法显示、position clouds、网孔、相机和轨道、简单的器件（立方体、线、圆）
+
+
+3.0 alpha
+	1.opencv3.0有更多的GPU加速函数，格式比opencv2.4更方便使用。
+		透明的API
+		由于opencl代码因素和透明的API，所以要在主流平台上优化opencl核函数，如intel芯片、AMD芯片
+	2.在x86和x64平台opencv二进制文件包含和使用了Intel®的子集（可以使用其一部分指令）
+	3.主要变化：
+		a.修正ML模块
+		b.highgui模块被分为3个部分：imgcodes、videoio、highgui本身
+
+
+3.0beta
+	1.opencl:
+		opencl代码在Intel Iris 显卡 和 Intel Iris Pro显卡被加速10%-230%，包括Canny边缘检测、Laplacian、StereoBM、BruteForceMatcher、BackgroundSubtractorMOG2、StitchingWarpers。实现新的核函数：HOughLines，HoughLinesP，cvtColor，Gemm，DFT。
+	2.大约40个图像处理函数使用VEON 指令得到优化，所以在arm芯片上运行opencv3.0Beta快得多
+	3.java 绑定，已经绑定最新的features2d，background subtractor classes（背景消减类）
+	4.在x86和x64平台上，opencv二进制文件包含和使用了一部分Intel®的Integrated
+	Performance Primitives。
+
+
+
+3.0 rc
+	1.向后兼容opencv2.4
+		a.2.4.11包含在"opencv2/core.hpp"，其他的头文件附加在"opencv2/core/core.hpp"
+		b.智能指针（ptr<>）可以创建任何类型
+		c.opencv_ml训练存储的状态模块可以被opencv_ml3.0加载
+		d.修复opencv关于WinRT端口
+			在win_RT支持parallel_for,所以代码在多和设备上运行速度会非常快
+			优化the WMF video capturing backend（WMF视频后端抓取）
+		e.加载Standalone motion jpeg codec(独立移动jpeg译码器)到opencv_videoio。它不需要ffmpeg或者其他第三方库。但是运行速度比ffmpeg更快，特别时在arm上。	
+		f. 引入opencv低水平加速API，目前仅包括一些数学函数。
+		使用单一的SIMD分支，在目标平台上编译SSE或者NEON指令
+
+3.0
+	1.为cv::parallel_for_添加pthread-based,也就是说所有并行处理应该兼容所有的POSIX操作系统，包括QNX
+	2.opencv android管理器完全用java被重写，现在支持opencv2.4和3.0，但是已经放弃了本地相机。。。
+	
+	3.改进了BRISK旋转不变算法
+	4.增加LATCH二进制描述文件，它优于目前二进制文件（ORB， BRIEF，AKAZE），可以和SURF比较。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
